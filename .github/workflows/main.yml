@@ -5,6 +5,9 @@ on:
     paths:
       - 'docs/*.docx'
 
+permissions:
+  contents: write  # ワークフローにリポジトリの内容を書き込む権限を付与
+
 jobs:
   convert-docx:
     runs-on: ubuntu-latest
@@ -29,6 +32,8 @@ jobs:
         done
 
     - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GITHUB_TOKENを設定
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
