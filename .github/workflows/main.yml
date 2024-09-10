@@ -1,0 +1,27 @@
+name: Convert Word to Markdown
+
+on:
+  push:
+    paths:
+      - '*.docx' # Wordファイルが変更されたとき
+
+jobs:
+  convert-docx:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Pandoc
+      run: sudo apt-get install pandoc
+
+    - name: Convert Word to Markdown
+      run: pandoc ./path/to/input.docx -t markdown -o ./path/to/output.md
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add ./path/to/output.md
+        git commit -m "Auto-converted Word file to Markdown"
+        git push
