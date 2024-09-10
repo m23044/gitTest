@@ -3,7 +3,7 @@ name: Convert Word files to Markdown
 on:
   push:
     paths:
-      - 'docs/*.docx'  # docsフォルダ内のすべての.docxファイルが対象
+      - 'docs/*.docx'
 
 jobs:
   convert-docx:
@@ -14,6 +14,9 @@ jobs:
 
     - name: Install Pandoc
       run: sudo apt-get install pandoc
+
+    - name: Create output directory if it doesn't exist
+      run: mkdir -p output  # outputディレクトリを作成
 
     - name: List Word files in docs/
       run: ls docs/
