@@ -18,8 +18,10 @@ jobs:
     - name: Install Pandoc
       run: sudo apt-get install pandoc
 
-    - name: Create output directory if it doesn't exist
-      run: mkdir -p output  # outputディレクトリを作成
+    - name: Create output directory and clean it
+      run: |
+        rm -rf output  # outputディレクトリを削除
+        mkdir -p output  # 新しくoutputディレクトリを作成
 
     - name: List Word files in docs/
       run: ls docs/
