@@ -16,12 +16,10 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install Pandoc
-      run: sudo apt-get install pandoc
+      run: sudo apt-get install -y pandoc
 
-    - name: Create output directory and clean it
-      run: |
-        rm -rf output  # outputディレクトリを削除
-        mkdir -p output  # 新しくoutputディレクトリを作成
+    - name: Create output directory if it doesn't exist
+      run: mkdir -p output  # outputディレクトリを作成
 
     - name: List Word files in docs/
       run: ls docs/
@@ -30,7 +28,8 @@ jobs:
       run: |
         for file in docs/*.docx; do
           filename=$(basename "$file" .docx)  # ファイル名から拡張子を除去
-          pandoc "$file" --extract-media=output/media -t markdown -o "output/$filename.md"  # 画像を含めて変換
+          # mediaディレクトリをoutput/mediaに設定
+          pandoc "$file" --extract-media=output/media -t markdown -o "output/$filename.md"
         done
 
     - name: Commit and push changes
