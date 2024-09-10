@@ -1,9 +1,9 @@
-name: Convert Word to Markdown
+name: Convert Word files to Markdown
 
 on:
   push:
     paths:
-      - '*.docx' # Wordファイルが変更されたとき
+      - 'docs/*.docx'  # docsフォルダ内のすべての.docxファイルが対象
 
 jobs:
   convert-docx:
@@ -15,13 +15,20 @@ jobs:
     - name: Install Pandoc
       run: sudo apt-get install pandoc
 
-    - name: Convert Word to Markdown
-      run: pandoc ./path/to/input.docx -t markdown -o ./path/to/output.md
+    - name: List Word files in docs/
+      run: ls docs/
+
+    - name: Convert all Word files to Markdown
+      run: |
+        for file in docs/*.docx; do
+          filename=$(basename "$file" .docx)  # ファイル名から拡張子を除去
+          pandoc "$file" -t markdown -o "output/$filename.md"  # Markdownに変換
+        done
 
     - name: Commit and push changes
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add ./path/to/output.md
-        git commit -m "Auto-converted Word file to Markdown"
+        git add output/*.md
+        git commit -m "Auto-converted Word files to Markdown"
         git push
